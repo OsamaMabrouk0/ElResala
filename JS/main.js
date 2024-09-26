@@ -464,3 +464,108 @@ document.addEventListener("DOMContentLoaded", function () {
 window.addEventListener("load", function () {
     allowScroll(); // السماح بالتدفق بعد تحميل الصفحة
 });
+
+
+
+ // API mock
+// API mock
+const azkarData = {
+    sabah: [
+        "سبحان الله وبحمده",
+        "الحمد لله رب العالمين",
+        "لا إله إلا الله وحده لا شريك له",
+        "اللهم بك أصبحنا وبك أمسينا",
+        "رضيت بالله ربا وبالإسلام دينا وبمحمد صلى الله عليه وسلم نبيا",
+        "اللهم إني أسألك علما نافعا ورزقا طيبا وعملا متقبلا"
+    ],
+    masaa: [
+        "أمسينا وأمسى الملك لله",
+        "اللهم بك أمسينا وبك نحيا",
+        "سبحان الله العظيم",
+        "أعوذ بكلمات الله التامات من شر ما خلق",
+        "اللهم صل وسلم على نبينا محمد",
+        "اللهم إني أعوذ بك من الهم والحزن، وأعوذ بك من العجز والكسل"
+    ],
+    noom: [
+        "باسمك اللهم أموت وأحيا",
+        "اللهم أسلمت نفسي إليك",
+        "اللهم اغفر لي وارحمني",
+        "اللهم إني أسألك العافية في الدنيا والآخرة",
+        "اللهم إني أعوذ بك من سوء القضاء ومن درك الشقاء ومن شماتة الأعداء",
+        "اللهم إني أعوذ بك من النار"
+    ]
+};
+
+
+// Function to toggle the visibility of the azkar list
+function toggleAzkarList(event) {
+    const azkarType = event.target.getAttribute('data-azkar');
+    const azkarContent = document.getElementById(`${azkarType}-azkar`);
+
+    // Toggle the display
+    if (azkarContent.style.display === "none" || azkarContent.style.display === "") {
+        // Close all other lists
+        document.querySelectorAll('.azkar-content').forEach(content => {
+            content.style.display = 'none';
+        });
+        // Open the clicked list
+        azkarContent.style.display = "block";
+    } else {
+        azkarContent.style.display = "none";
+    }
+}
+
+// Load the Azkar into the content
+function loadAzkar() {
+    for (const type in azkarData) {
+        const ul = document.getElementById(`${type}-azkar`);
+        azkarData[type].forEach(zekr => {
+            const li = document.createElement('li');
+            li.textContent = zekr;
+            ul.appendChild(li);
+        });
+    }
+}
+
+// Event listener for title clicks
+document.querySelectorAll('.azkar-title').forEach(title => {
+    title.addEventListener('click', toggleAzkarList);
+});
+
+// Load Azkar initially
+loadAzkar();
+
+
+
+
+function playAdhan(audioId) {
+    const audioElement = document.getElementById(audioId);
+    if (audioElement) {
+        audioElement.play()
+            .then(() => console.log("الصوت يعمل بنجاح"))
+            .catch((error) => console.error("خطأ في تشغيل الصوت:", error));
+    }
+}
+
+// استدعاء الدالة لتشغيل الصوت
+playAdhan("audio1"); playAdhan("audio2"); playAdhan("audio3"); playAdhan("audio4"); playAdhan("audio5"); 
+
+document.addEventListener("DOMContentLoaded", () => {
+    const audios = document.querySelectorAll("audio");
+
+    // توقف جميع ملفات الصوت عند تحميل الصفحة
+    audios.forEach(audio => audio.pause());
+
+    // إضافة مستمع تشغيل على كل ملف صوتي
+    audios.forEach((audio) => {
+        audio.addEventListener('play', () => {
+            // عندما يتم تشغيل أحد ملفات الصوت، توقف الباقي
+            audios.forEach((otherAudio) => {
+                if (otherAudio !== audio) {
+                    otherAudio.pause();
+                    otherAudio.currentTime = 0;  // إعادة التوقيت للصفر
+                }
+            });
+        });
+    });
+});
